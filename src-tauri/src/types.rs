@@ -12,10 +12,15 @@ pub struct PackConfig {
     pub exclude_patterns: Vec<String>,
     pub install_dir: String,
     // Qt IFW 风格打包选项
+    #[serde(default)]
     pub use_qt_ifw_style: bool,
+    #[serde(default)]
     pub install_root: Option<String>,
+    #[serde(default)]
     pub qmake_args: Vec<String>,
+    #[serde(default)]
     pub make_args: Vec<String>,
+    #[serde(default)]
     pub bindist_script: Option<String>,
 }
 

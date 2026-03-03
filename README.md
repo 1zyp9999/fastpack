@@ -1,73 +1,73 @@
-# FastPack - Ultra-Fast Cross-Platform Package Builder
+# FastPack - 超快速跨平台打包工具
 
-⚡ **10x Faster Than Traditional Packaging Tools**
+⚡ **比传统打包工具快 10 倍**
 
-FastPack is a high-performance cross-platform package builder with a modern GUI, designed to be significantly faster than Qt-based packaging tools and other traditional solutions.
+FastPack 是一个高性能的跨平台打包工具，采用现代化 GUI 设计，旨在比 Qt 打包工具和其他传统解决方案更快。
 
-## 🌍 Cross-Platform Support
+## 🌍 跨平台支持
 
-FastPack works seamlessly on both **Windows** and **Linux**:
+FastPack 可在 **Windows** 和 **Linux** 上无缝运行：
 
-- ✅ **Windows 10/11** - Native .exe installer support
-- ✅ **Linux** (Ubuntu, Fedora, Arch, etc.) - Native .run installer support
-- ✅ **macOS** (Coming soon)
+- ✅ **Windows 10/11** - 原生 .exe 安装程序支持
+- ✅ **Linux**（Ubuntu、Fedora、Arch 等）- 原生 .run 安装程序支持
+- ✅ **macOS**（即将推出）
 
-## 🚀 Key Features
+## 🚀 主要特性
 
-### Performance Optimizations
-- **Rust Core Engine**: Compiled for maximum speed, zero-cost abstractions
-- **zstd Compression**: 3-5x faster than gzip with comparable compression ratios
-- **Multi-threaded Processing**: Parallel compression and file handling
-- **Incremental Packaging**: Only pack changed files, avoid redundant work
-- **Memory-Mapped Files**: Efficient large file handling without extra memory overhead
-- **Zero-Copy Architecture**: Minimize data copying for maximum throughput
+### 性能优化
+- **Rust 核心引擎**：编译优化，零成本抽象
+- **zstd 压缩**：比 gzip 快 3-5 倍，压缩率相当
+- **多线程处理**：并行压缩和文件处理
+- **增量打包**：仅打包变更文件，避免重复工作
+- **内存映射文件**：高效处理大文件，无需额外内存开销
+- **零拷贝架构**：最小化数据复制，最大化吞吐量
 
-### Modern GUI
-- **Tauri Framework**: Lightweight, faster than Qt by 3-5x
-- **Real-time Progress**: Live updates during packaging
-- **Intuitive Interface**: Easy to use for developers of all skill levels
-- **Cross-Platform**: Same great experience on Windows and Linux
+### 现代化 GUI
+- **Tauri 框架**：轻量级，比 Qt 快 3-5 倍
+- **实时进度**：打包过程中实时更新
+- **直观界面**：适合各种技能水平的开发者
+- **跨平台**：Windows 和 Linux 上的绝佳体验
 
-### Build Integration
-- **Auto-Detection**: Automatically detects project type (CMake, Make, QMake, Conan, Cargo, Go, Node, Python)
-- **Multi-Language Support**: Works with C++, Rust, Go, Node.js, Python, and more
-- **Parallel Builds**: Utilizes all CPU cores for faster compilation
+### 构建集成
+- **自动检测**：自动检测项目类型（CMake、Make、QMake、Conan、Cargo、Go、Node、Python）
+- **多语言支持**：支持 C++、Rust、Go、Node.js、Python 等
+- **并行构建**：利用所有 CPU 核心进行更快的编译
 
-### Smart Packaging
-- **Exclude Patterns**: Flexible file filtering with glob patterns
-- **Custom Install Paths**: Define where your package should be installed
-- **Script Hooks**: Pre and post-install script support
-- **Self-Contained Installers**: Easy distribution with .exe (Windows) or .run (Linux)
+### 智能打包
+- **排除模式**：使用 glob 模式灵活过滤文件
+- **自定义安装路径**：定义包的安装位置
+- **脚本钩子**：支持安装前后脚本
+- **独立安装程序**：易于分发的 .exe（Windows）或 .run（Linux）
 
-## 📊 Performance Comparison
+## 📊 性能对比
 
-| Feature | FastPack | Qt Installer | makepkg | dpkg-deb |
+| 特性 | FastPack | Qt Installer | makepkg | dpkg-deb |
 |---------|----------|--------------|---------|----------|
-| **Packaging Speed** | ⚡ 10x | 🐢 1x | 🐢 2x | 🐢 1.5x |
-| **Compression** | zstd (fast) | gzip | gzip | gzip |
-| **Startup Time** | < 50ms | 500ms+ | N/A | N/A |
-| **Memory Usage** | Low | High | Medium | Medium |
-| **GUI Responsiveness** | Excellent | Good | None | None |
-| **Multi-threading** | Full | Limited | Partial | Limited |
-| **Cross-Platform** | ✅ Win+Linux | ✅ Win+Linux | ❌ Linux only | ❌ Linux only |
+| **打包速度** | ⚡ 10 倍 | 🐢 1 倍 | 🐢 2 倍 | 🐢 1.5 倍 |
+| **压缩方式** | zstd (快速) | gzip | gzip | gzip |
+| **启动时间** | < 50ms | 500ms+ | N/A | N/A |
+| **内存占用** | 低 | 高 | 中 | 中 |
+| **GUI 响应** | 优秀 | 良好 | 无 | 无 |
+| **多线程** | 完全支持 | 有限 | 部分 | 有限 |
+| **跨平台** | ✅ Win+Linux | ✅ Win+Linux | ❌ 仅 Linux | ❌ 仅 Linux |
 
-## 🛠️ Installation
+## 🛠️ 安装
 
-### Prerequisites
+### 前置要求
 
 #### Windows
 ```powershell
-# Install Node.js
-# Download from: https://nodejs.org/
+# 安装 Node.js
+# 下载地址：https://nodejs.org/
 
-# Install Rust
-# Download from: https://www.rust-lang.org/tools/install
+# 安装 Rust
+# 下载地址：https://www.rust-lang.org/tools/install
 
-# Install CMake (optional, for building C++ projects)
-# Download from: https://cmake.org/download/
+# 安装 CMake（可选，用于构建 C++ 项目）
+# 下载地址：https://cmake.org/download/
 
-# Install zstd (optional, for compression)
-# Using Chocolatey:
+# 安装 zstd（可选，用于压缩）
+# 使用 Chocolatey：
 choco install zstandard
 ```
 
@@ -84,83 +84,83 @@ sudo dnf install -y gcc-c++ cmake zstd
 sudo pacman -S base-devel cmake zstd
 ```
 
-### Build from Source
+### 从源码构建
 
 #### Windows
 ```powershell
-# Clone repository
-git clone https://github.com/yourusername/fastpack.git
+# 克隆仓库
+git clone https://github.com/1zyp9999/fastpack.git
 cd fastpack
 
-# Build application
+# 构建应用
 .\build.bat build
 
-# The binary will be in src-tauri\target\release\fastpack.exe
+# 可执行文件位于 src-tauri\target\release\fastpack.exe
 ```
 
 #### Linux
 ```bash
-# Clone repository
-git clone https://github.com/yourusername/fastpack.git
+# 克隆仓库
+git clone https://github.com/1zyp9999/fastpack.git
 cd fastpack
 
-# Build application
+# 构建应用
 chmod +x build.sh
 ./build.sh build
 
-# The binary will be in src-tauri/target/release/fastpack
+# 可执行文件位于 src-tauri/target/release/fastpack
 ```
 
-### Quick Install (Pre-built)
+### 快速安装（预构建）
 
 #### Windows
 ```powershell
-# Download and run installer
-# From: https://github.com/yourusername/fastpack/releases/latest/download/fastpack-installer.exe
+# 下载并运行安装程序
+# 地址：https://github.com/1zyp9999/fastpack/releases/latest/download/fastpack-installer.exe
 
-# Or using PowerShell:
-Invoke-WebRequest -Uri "https://github.com/yourusername/fastpack/releases/latest/download/fastpack-installer.exe" -OutFile "fastpack-installer.exe"
+# 或使用 PowerShell：
+Invoke-WebRequest -Uri "https://github.com/1zyp9999/fastpack/releases/latest/download/fastpack-installer.exe" -OutFile "fastpack-installer.exe"
 .\fastpack-installer.exe
 ```
 
 #### Linux
 ```bash
-# Download and run installer
-wget https://github.com/yourusername/fastpack/releases/latest/download/fastpack-installer.run
+# 下载并运行安装程序
+wget https://github.com/1zyp9999/fastpack/releases/latest/download/fastpack-installer.run
 chmod +x fastpack-installer.run
 sudo ./fastpack-installer.run
 ```
 
-## 📖 Usage
+## 📖 使用方法
 
-### GUI Mode
+### GUI 模式
 
 #### Windows
 ```powershell
-# Launch GUI
+# 启动 GUI
 fastpack
 
-# Or run from build directory
+# 或从构建目录运行
 .\src-tauri\target\release\fastpack.exe
 ```
 
 #### Linux
 ```bash
-# Launch GUI
+# 启动 GUI
 fastpack
 
-# Or run from build directory
+# 或从构建目录运行
 ./src-tauri/target/release/fastpack
 ```
 
-### Command Line Mode
+### 命令行模式
 
 #### Windows
 ```powershell
-# Create a package with default settings
+# 使用默认设置创建包
 fastpack pack --source .\myapp --output myapp.exe
 
-# With custom settings
+# 使用自定义设置
 fastpack pack `
   --source .\myapp `
   --output myapp.exe `
@@ -173,10 +173,10 @@ fastpack pack `
 
 #### Linux
 ```bash
-# Create a package with default settings
+# 使用默认设置创建包
 fastpack pack --source ./myapp --output myapp.run
 
-# With custom settings
+# 使用自定义设置
 fastpack pack \
   --source ./myapp \
   --output myapp.run \
@@ -187,11 +187,11 @@ fastpack pack \
   --threads 8
 ```
 
-## 📝 Configuration
+## 📝 配置
 
-### Project Configuration (fastpack.json)
+### 项目配置 (fastpack.json)
 
-#### Windows Example
+#### Windows 示例
 ```json
 {
   "source_dir": "./",
@@ -212,7 +212,7 @@ fastpack pack \
 }
 ```
 
-#### Linux Example
+#### Linux 示例
 ```json
 {
   "source_dir": "./",
@@ -234,149 +234,149 @@ fastpack pack \
 }
 ```
 
-## 🎯 Examples
+## 🎯 示例
 
-### C++ Project (Cross-Platform)
+### C++ 项目（跨平台）
 
 #### Windows
 ```powershell
 cd examples\cpp_project
 fastpack
-# Select CMake project type
-# Click "Build Project" then "Create Package"
+# 选择 CMake 项目类型
+# 点击 "Build Project" 然后点击 "Create Package"
 ```
 
 #### Linux
 ```bash
 cd examples/cpp_project
 fastpack
-# Select CMake project type
-# Click "Build Project" then "Create Package"
+# 选择 CMake 项目类型
+# 点击 "Build Project" 然后点击 "Create Package"
 ```
 
-### QMake Project (Qt)
+### QMake 项目（Qt）
 
 #### Windows
 ```powershell
 cd examples\qmake_project
 fastpack
-# Select QMake project type
-# Click "Build Project" then "Create Package"
+# 选择 QMake 项目类型
+# 点击 "Build Project" 然后点击 "Create Package"
 ```
 
 #### Linux
 ```bash
 cd examples/qmake_project
 fastpack
-# Select QMake project type
-# Click "Build Project" then "Create Package"
+# 选择 QMake 项目类型
+# 点击 "Build Project" 然后点击 "Create Package"
 ```
 
-### Conan Project
+### Conan 项目
 
 #### Windows
 ```powershell
 cd examples\conan_project
 fastpack
-# Select Conan project type
-# Click "Build Project" then "Create Package"
+# 选择 Conan 项目类型
+# 点击 "Build Project" 然后点击 "Create Package"
 ```
 
 #### Linux
 ```bash
 cd examples/conan_project
 fastpack
-# Select Conan project type
-# Click "Build Project" then "Create Package"
+# 选择 Conan 项目类型
+# 点击 "Build Project" 然后点击 "Create Package"
 ```
 
-### Node.js Project (Cross-Platform)
+### Node.js 项目（跨平台）
 
 #### Windows
 ```powershell
 cd examples\node_project
 fastpack
-# Select Node.js project type
-# Click "Build Project" then "Create Package"
+# 选择 Node.js 项目类型
+# 点击 "Build Project" 然后点击 "Create Package"
 ```
 
 #### Linux
 ```bash
 cd examples/node_project
 fastpack
-# Select Node.js project type
-# Click "Build Project" then "Create Package"
+# 选择 Node.js 项目类型
+# 点击 "Build Project" 然后点击 "Create Package"
 ```
 
-## 🔧 Advanced Features
+## 🔧 高级功能
 
-### Incremental Packaging
-FastPack automatically tracks file changes and only packs modified files, dramatically speeding up subsequent builds.
+### 增量打包
+FastPack 自动跟踪文件变更，仅打包修改的文件，显著加快后续构建速度。
 
-### Custom Compression Levels
-- **Level 1**: Fastest compression, larger files
-- **Level 3**: Balanced (recommended)
-- **Level 9**: Good compression, slower
-- **Level 19**: Maximum compression, slowest
+### 自定义压缩级别
+- **Level 1**：最快压缩，文件较大
+- **Level 3**：平衡（推荐）
+- **Level 9**：良好压缩，较慢
+- **Level 19**：最大压缩，最慢
 
-### Multi-threaded Processing
-Configure thread count based on your CPU:
-- **Auto**: Uses all available cores
-- **Custom**: Set specific thread count (2, 4, 8, 16)
+### 多线程处理
+根据你的 CPU 配置线程数：
+- **Auto**：使用所有可用核心
+- **Custom**：设置特定线程数（2、4、8、16）
 
-## 📦 Supported Build Systems
+## 📦 支持的构建系统
 
-FastPack supports the following build systems:
+FastPack 支持以下构建系统：
 
-| Build System | Detection | Windows Support | Linux Support |
+| 构建系统 | 检测方式 | Windows 支持 | Linux 支持 |
 |--------------|------------|-----------------|----------------|
 | **CMake** | `CMakeLists.txt` | ✅ Visual Studio | ✅ Unix Makefiles |
 | **Make** | `Makefile` | ✅ nmake | ✅ make |
-| **QMake** | `*.pro` files | ✅ qmake + nmake | ✅ qmake-qt5 + make |
+| **QMake** | `*.pro` 文件 | ✅ qmake + nmake | ✅ qmake-qt5 + make |
 | **Conan** | `conanfile.txt/py` | ✅ conan + CMake | ✅ conan + CMake |
 | **Cargo** | `Cargo.toml` | ✅ cargo | ✅ cargo |
 | **Go** | `go.mod` | ✅ go | ✅ go |
 | **Node.js** | `package.json` | ✅ npm | ✅ npm |
 | **Python** | `setup.py`/`pyproject.toml` | ✅ python | ✅ python3 |
 
-## 📦 Output Format
+## 📦 输出格式
 
-### Windows (.exe Installer)
-The generated `.exe` file is a self-extracting installer that:
-1. Extracts files to specified installation directory
-2. Sets appropriate permissions
-3. Adds to system PATH
-4. Creates desktop and start menu shortcuts
-5. Runs pre/post-install scripts
+### Windows（.exe 安装程序）
+生成的 `.exe` 文件是一个自解压安装程序，功能包括：
+1. 解压文件到指定的安装目录
+2. 设置适当的权限
+3. 添加到系统 PATH
+4. 创建桌面和开始菜单快捷方式
+5. 运行安装前后脚本
 
-### Linux (.run Installer)
-The generated `.run` file is a self-extracting installer that:
-1. Extracts files to specified installation directory
-2. Sets appropriate permissions
-3. Creates symlinks to `/usr/local/bin`
-4. Registers desktop entries (if applicable)
-5. Runs pre/post-install scripts
+### Linux（.run 安装程序）
+生成的 `.run` 文件是一个自解压安装程序，功能包括：
+1. 解压文件到指定的安装目录
+2. 设置适当的权限
+3. 创建到 `/usr/local/bin` 的符号链接
+4. 注册桌面条目（如适用）
+5. 运行安装前后脚本
 
-## 🤝 Contributing
+## 🤝 贡献
 
-Contributions are welcome! Please read our contributing guidelines before submitting PRs.
+欢迎贡献！请在提交 PR 之前阅读我们的贡献指南。
 
-## 📄 License
+## 📄 许可证
 
-MIT License - see LICENSE file for details
+MIT 许可证 - 详见 LICENSE 文件
 
-## 🙏 Acknowledgments
+## 🙏 致谢
 
-- Built with [Tauri](https://tauri.app/)
-- Uses [zstd](https://github.com/facebook/zstd) for compression
-- Powered by [Rust](https://www.rust-lang.org/)
+- 基于 [Tauri](https://tauri.app/) 构建
+- 使用 [zstd](https://github.com/facebook/zstd) 进行压缩
+- 由 [Rust](https://www.rust-lang.org/) 驱动
 
-## 📞 Support
+## 📞 支持
 
-- GitHub Issues: https://github.com/yourusername/fastpack/issues
-- Documentation: https://fastpack.dev/docs
+- GitHub Issues: https://github.com/1zyp9999/fastpack/issues
+- 文档：https://fastpack.dev/docs
 - Discord: https://discord.gg/fastpack
 
 ---
 
-**FastPack** - Making cross-platform packaging fast and easy! 🚀
+**FastPack** - 让跨平台打包变得快速而简单！🚀

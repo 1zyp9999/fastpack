@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastPack - 超快打包工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .background::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2em;
+            font-weight: 300;
+        }
+
+        .main-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                        0 0 60px rgba(102, 126, 234, 0.2);
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-section {
+            margin-bottom: 30px;
+        }
+
+        .card-section h2 {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffffff;
+        }
+
+        .card-section h2::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            color: #ffffff;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            border-color: rgba(102, 126, 234, 0.6);
+        }
+
+        .action-btn:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        .action-btn .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .drop-zone {
+            border: 3px dashed rgba(102, 126, 234, 0.5);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(102, 126, 234, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .drop-zone:hover,
+        .drop-zone.drag-over {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.15);
+            transform: scale(1.02);
+        }
+
+        .drop-zone .icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+            display: block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .drop-zone p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .drop-zone .hint {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 9L1 4l1-1 5 5 5-5-1 1 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .progress-container {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .progress-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 6px;
+            transition: width 0.3s ease;
+            width: 0%;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95em;
+        }
+
+        .progress-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-text .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .success-message.active {
+            display: block;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .success-message .icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            display: block;
+            animation: bounce 1s ease-out;
+        }
+
+        .success-message h3 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .success-message p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .auto-detect {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .auto-detect .badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .auto-detect .text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95em;
+        }
+
+        .one-click-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .one-click-section h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .one-click-section h3 .icon {
+            font-size: 1.3em;
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>⚡ FastPack</h1>
+            <p>超快打包工具 · 一键完成 · 跨平台支持</p>
+        </div>
+
+        <div class="main-card">
+            <div class="card-section">
+                <h2>📁 选择项目文件夹</h2>
+
+                <!-- 路径显示框 -->
+                <div class="form-group">
+                    <label>项目路径：</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="sourcePath" placeholder="点击按钮选择或直接输入路径" 
+                            style="flex: 1; background: rgba(255,255,255,0.05);" 
+                            onchange="checkManualPath()"
+                            onkeypress="if(event.key==='Enter') checkManualPath()">
+                        <button class="btn btn-secondary" onclick="document.getElementById('sourceDir').click()" 
+                            style="padding: 12px 24px; white-space: nowrap;">
+                            <span>📁</span> 选择文件夹
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 拖拽区域 -->
+                <div class="drop-zone" id="dropZone" style="margin-top: 20px;" onclick="document.getElementById('sourceDir').click()">
+                    <span class="icon">📂</span>
+                    <p>点击"选择文件夹"按钮</p>
+                    <p class="hint">或拖拽文件夹到这里</p>
+                </div>
+                
+                <input type="file" id="sourceDir" webkitdirectory directory style="display: none;" onchange="handleFolderSelect(event)">
+                
+                <div class="auto-detect" id="autoDetect" style="display: none;">
+                    <span class="badge">自动检测</span>
+                    <span class="text" id="detectedType">CMake 项目</span>
+                </div>
+            </div>
+
+            <div class="card-section" id="configSection" style="display: none;">
+                <h2>⚙️ 项目配置</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>项目名称</label>
+                        <input type="text" id="packageName" placeholder="自动检测" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>版本号</label>
+                        <input type="text" id="version" placeholder="1.0.0" value="1.0.0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>输出文件</label>
+                        <input type="text" id="outputPath" placeholder="自动生成" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>安装路径</label>
+                        <input type="text" id="installDir" placeholder="自动设置" value="">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>压缩级别</label>
+                        <select id="compressionLevel">
+                            <option value="1">1 - 最快</option>
+                            <option value="3" selected>3 - 平衡</option>
+                            <option value="9">9 - 良好</option>
+                            <option value="19">19 - 最大</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>线程数</label>
+                        <select id="threads">
+                            <option value="auto" selected>自动 (全部核心)</option>
+                            <option value="2">2</option>
+                            <option value="4">4</option>
+                            <option value="8">8</option>
+                            <option value="16">16</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="one-click-section" id="oneClickSection" style="display: none;">
+                <h3><span class="icon">🚀</span> 一键打包</h3>
+                <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 20px;">
+                    所有配置已自动设置，点击下方按钮即可开始打包
+                </p>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="packBtn" onclick="startPacking()">
+                        <span>⚡</span> 开始打包
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetAll()">
+                        <span>🔄</span> 重置
+                    </button>
+                </div>
+            </div>
+
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-info">
+                    <div class="progress-text">
+                        <span class="spinner"></span>
+                        <span id="progressText">正在打包...</span>
+                    </div>
+                    <span id="progressPercent">0%</span>
+                </div>
+
+                <div class="stats-grid" id="statsGrid" style="display: none;">
+                    <div class="stat-card">
+                        <div class="value" id="filesCount">0</div>
+                        <div class="label">文件数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value" id="totalSize">0 MB</div>
+                        <div class="label">总大小</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value" id="compressedSize">0 MB</div>
+                        <div class="label">压缩后</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value" id="timeElapsed">0s</div>
+                        <div class="label">耗时</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <span class="icon">✅</span>
+                <h3>打包完成！</h3>
+                <p id="successText">您的安装包已成功创建</p>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="openOutputFolder()">
+                        <span>📂</span> 打开文件夹
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetAll()">
+                        <span>🔄</span> 打包新项目
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        const { invoke } = window.__TAURI__.core;
+
+        let sourcePath = '';
+        let startTime = null;
+        let timerInterval = null;
+
+        window.handleFolderSelect = function(event) {
+            const files = event.target.files;
+            if (files.length === 0) return;
+
+            // 获取文件夹路径
+            const file = files[0];
+            sourcePath = file.path || file.webkitRelativePath;
+            
+            // 从 webkitRelativePath 提取文件夹路径
+            if (sourcePath.includes('/')) {
+                const parts = sourcePath.split('/');
+                sourcePath = parts.slice(0, parts.length - 1).join('/');
+            }
+
+            // 填充到输入框
+            document.getElementById('sourcePath').value = sourcePath;
+            
+            const folderName = sourcePath.split(/[/\\]/).pop();
+            document.getElementById('dropZone').innerHTML = `
+                <span class="icon">✅</span>
+                <p>${folderName}</p>
+                <p class="hint">已选择</p>
+            `;
+
+            detectProjectType(sourcePath);
+        };
+
+        // 手动输入路径后检测
+        window.checkManualPath = async function() {
+            const path = document.getElementById('sourcePath').value.trim();
+            if (!path) return;
+            sourcePath = path;
+            const folderName = path.split(/[/\\]/).pop();
+            document.getElementById('dropZone').innerHTML = `
+                <span class="icon">✅</span>
+                <p>${folderName}</p>
+                <p class="hint">已选择</p>
+            `;
+            detectProjectType(sourcePath);
+        };
+
+        window.detectProjectType = async function(path) {
+            try {
+                const type = await invoke('detect_project_type', { path });
+                const version = await invoke('get_project_version', { path });
+
+                const typeMap = {
+                    'CMake': 'CMake 项目',
+                    'Make': 'Make 项目',
+                    'QMake': 'QMake (Qt) 项目',
+                    'Conan': 'Conan 项目',
+                    'Cargo': 'Cargo (Rust) 项目',
+                    'Go': 'Go 项目',
+                    'Node': 'Node.js 项目',
+                    'Python': 'Python 项目',
+                    'Generic': '通用项目'
+                };
+
+                const typeName = typeMap[type] || '未知项目';
+
+                document.getElementById('autoDetect').style.display = 'flex';
+                document.getElementById('detectedType').textContent = typeName;
+                document.getElementById('configSection').style.display = 'block';
+                document.getElementById('oneClickSection').style.display = 'block';
+
+                const projectName = path.split(/[/\\]/).pop();
+                const isWindows = navigator.userAgent.toLowerCase().includes('windows');
+                document.getElementById('packageName').value = projectName;
+                document.getElementById('version').value = version || '1.0.0';  // 自动填充版本号
+                document.getElementById('outputPath').value = projectName + (isWindows ? '.exe' : '.run');
+                document.getElementById('installDir').value = isWindows
+                    ? `C:\\Program Files\\${projectName}`
+                    : `/opt/${projectName}`;  // 默认安装到 /opt/项目名
+
+            } catch (error) {
+                console.error('检测失败:', error);
+            }
+        };
+
+        window.startPacking = async function() {
+            if (!sourcePath) {
+                alert('请先选择项目文件夹！');
+                return;
+            }
+
+            const config = {
+                source_dir: sourcePath,
+                output_path: document.getElementById('outputPath').value,
+                package_name: document.getElementById('packageName').value,
+                version: document.getElementById('version').value,
+                install_dir: document.getElementById('installDir').value,
+                compression_level: parseInt(document.getElementById('compressionLevel').value),
+                threads: document.getElementById('threads').value === 'auto' ? null : parseInt(document.getElementById('threads').value),
+                exclude_patterns: []
+            };
+
+            document.getElementById('progressContainer').classList.add('active');
+            document.getElementById('oneClickSection').style.display = 'none';
+            document.getElementById('statsGrid').style.display = 'grid';
+
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 100);
+
+            try {
+                const result = await invoke('pack', { config });
+                
+                clearInterval(timerInterval);
+                
+                document.getElementById('progressFill').style.width = '100%';
+                document.getElementById('progressPercent').textContent = '100%';
+                document.getElementById('progressText').textContent = '完成！';
+
+                document.getElementById('filesCount').textContent = result.files_count;
+                document.getElementById('totalSize').textContent = formatBytes(result.original_size);
+                document.getElementById('compressedSize').textContent = formatBytes(result.compressed_size);
+                document.getElementById('timeElapsed').textContent = (result.duration_ms / 1000).toFixed(2) + 's';
+
+                // 更新输出路径输入框
+                document.getElementById('outputPath').value = result.output_path;
+
+                setTimeout(() => {
+                    document.getElementById('progressContainer').style.display = 'none';
+                    document.getElementById('successMessage').classList.add('active');
+                    document.getElementById('successText').textContent =
+                        `安装包已创建：${result.output_path}\n压缩率：${result.compression_ratio.toFixed(1)}%`;
+                }, 1000);
+                
+            } catch (error) {
+                clearInterval(timerInterval);
+                alert('打包失败：' + error);
+                resetAll();
+            }
+        };
+
+        window.updateTimer = function() {
+            if (!startTime) return;
+            const elapsed = Date.now() - startTime;
+            document.getElementById('timeElapsed').textContent = (elapsed / 1000).toFixed(1) + 's';
+        };
+
+        window.resetAll = function() {
+            sourcePath = '';
+            startTime = null;
+            if (timerInterval) clearInterval(timerInterval);
+
+            document.getElementById('sourcePath').value = '';
+            document.getElementById('dropZone').innerHTML = `
+                <span class="icon">📂</span>
+                <p>点击"选择文件夹"按钮</p>
+                <p class="hint">或拖拽文件夹到这里</p>
+            `;
+            document.getElementById('autoDetect').style.display = 'none';
+            document.getElementById('configSection').style.display = 'none';
+            document.getElementById('oneClickSection').style.display = 'none';
+            document.getElementById('progressContainer').classList.remove('active');
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('successMessage').classList.remove('active');
+            document.getElementById('statsGrid').style.display = 'none';
+            document.getElementById('packageName').value = '';
+            document.getElementById('outputPath').value = '';
+            document.getElementById('installDir').value = '';
+        };
+
+        window.openOutputFolder = async function() {
+            // 打开输出文件所在的文件夹
+            const outputPath = document.getElementById('outputPath').value;
+            let folderPath = '';
+            
+            if (outputPath) {
+                folderPath = outputPath.substring(0, outputPath.lastIndexOf('/'));
+            }
+            
+            const pathToOpen = folderPath || sourcePath;
+            
+            if (!pathToOpen) {
+                alert('没有可用的文件夹路径');
+                return;
+            }
+            
+            try {
+                await invoke('shell-open', { path: pathToOpen });
+            } catch (error) {
+                console.error('打开文件夹失败:', error);
+                alert('打开文件夹失败：' + error + '\n路径：' + pathToOpen);
+            }
+        };
+
+        window.formatBytes = function(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        };
+
+        document.getElementById('dropZone').addEventListener('dragover', (e) => {
+            e.preventDefault();
+            document.getElementById('dropZone').classList.add('drag-over');
+        });
+
+        document.getElementById('dropZone').addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            document.getElementById('dropZone').classList.remove('drag-over');
+        });
+
+        document.getElementById('dropZone').addEventListener('drop', (e) => {
+            e.preventDefault();
+            document.getElementById('dropZone').classList.remove('drag-over');
+
+            // 尝试获取拖拽的文件夹路径
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                // 通过 files 获取路径（更可靠）
+                const file = e.dataTransfer.files[0];
+                const path = file.path || file.webkitRelativePath;
+                
+                if (path) {
+                    // 获取文件夹路径（去掉文件名）
+                    const parts = path.split(/[/\\]/);
+                    sourcePath = parts.slice(0, parts.length - 1).join('/');
+                    
+                    const folderName = parts[parts.length - 2] || parts[0];
+                    document.getElementById('dropZone').innerHTML = `
+                        <span class="icon">✅</span>
+                        <p>${folderName}</p>
+                        <p class="hint">已选择</p>
+                    `;
+                    detectProjectType(sourcePath);
+                } else {
+                    alert('无法获取文件夹路径，请使用点击选择方式');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

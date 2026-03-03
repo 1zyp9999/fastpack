@@ -1,0 +1,22 @@
+{
+  "source_dir": "./",
+  "output_path": "./output.run",
+  "package_name": "myapp",
+  "version": "1.0.0",
+  "install_dir": "/opt/myapp",
+  "compression_level": 3,
+  "threads": null,
+  "exclude_patterns": [
+    "*.git",
+    "*.o",
+    "*.so",
+    "*.a",
+    "build/",
+    "target/",
+    "node_modules/",
+    ".vscode/",
+    ".idea/"
+  ],
+  "pre_install_script": null,
+  "post_install_script": null
+}

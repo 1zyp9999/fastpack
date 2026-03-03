@@ -1,0 +1,47 @@
+# Rust
+target/
+Cargo.lock
+**/*.rs.bk
+*.pdb
+
+# Node
+node_modules/
+package-lock.json
+yarn.lock
+.pnpm-debug.log*
+
+# Build outputs
+*.run
+*.tar.gz
+*.tar.xz
+*.deb
+*.rpm
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Cache
+.fastpack_cache/
+.cache/
+
+# Logs
+*.log
+logs/
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# Build artifacts
+build/
+dist/
+out/

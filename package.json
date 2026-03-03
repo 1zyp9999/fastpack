@@ -1,0 +1,23 @@
+{
+  "name": "fastpack",
+  "version": "1.0.0",
+  "description": "Ultra-fast cross-platform package builder with GUI",
+  "type": "module",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "keywords": [
+    "cross-platform",
+    "package",
+    "installer",
+    "tauri",
+    "rust"
+  ],
+  "author": "FastPack Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0"
+  }
+}
